@@ -10,16 +10,17 @@ def canUnlockAll(boxes):
     Each box contains a list of keys to other boxes.
     The function uses a breadth-first search approach to explore the boxes.
     """
-    keys = [0]
-    opened = []
+    n = len(boxes)
+    if n == 0:
+        return False
+
+    keys = list(boxes[0])
+    unlocked = {0}
 
     while keys:
-        current = keys.pop(0)
-        if current not in opened and current < len(boxes):
-            opened.append(current)
-            keys += boxes[current]
+        current_key = keys.pop(0)
+        if 0 <= current_key < n and current_key not in unlocked:
+            unlocked.add(current_key)
+            keys.extend(boxes[current_key])
 
-    if len(opened) == len(boxes):
-        return True
-    else:
-        return False
+    return len(unlocked) == n
