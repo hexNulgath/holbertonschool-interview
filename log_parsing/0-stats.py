@@ -56,14 +56,18 @@ def process_logs() -> None:
 
     # Strict regex pattern for input validation
     log_pattern = re.compile(
-        # IP address
-        r'^\s*(\d{1,3}(?:\.\d{1,3}){3})\s*-\s*'
-        # Timestamp (very flexible)
-        r'\[([\d\-:\s\.]+)\]\s*'
-        # Method, Path, HTTP version
-        r'"([A-Z]+)\s+([^"]+)\s+HTTP/[\d.]+"\s*'
-        # Status code and byte size
-        r'(\d{3})\s+(\d+)\s*$'
+        r'^\s*'                                           # Leading whitespace
+        r'(?P<ip>\d{1,3}(?:\.\d{1,3}){3})?'               # Optional IP address
+        r'\s*-\s*'                                        # Optional dash separator
+        # Optional timestamp, loose brackets
+        r'\[?(?P<timestamp>[^\]]+)?\]?\s*'
+        # Optional HTTP method
+        r'"?(?P<method>[A-Z]+)?\s*'
+        r'(?P<path>\S+)?\s*'                              # Optional path
+        r'(?:HTTP/\d\.\d)?"?\s*'                          # Optional protocol
+        # Optional status code
+        r'(?P<status>\d{3})?\s*'
+        r'(?P<size>\d+)?\s*$'                             # Optional size
     )
 
     def handle_interrupt(sig, frame):
