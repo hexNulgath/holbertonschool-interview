@@ -28,6 +28,7 @@ Usage:
 import fileinput
 import sys
 import signal
+import re
 
 
 def print_stats(total_size, status_codes):
@@ -51,8 +52,10 @@ def process_logs():
     status_codes = {}  # Dictionary to count occurrences of each status code
     total_size = 0     # Accumulator for total file size
     count = 0          # Counter for number of lines processed
+    log_format = r'^\S+ - \[\S+ \S+\] "GET /projects/\d+ HTTP/\d\.\d" (\d+) (\d+)$'
 
     # Define signal handler for keyboard interruption
+
     def signal_handler(sig, frame):
         print_stats(total_size, status_codes)
         sys.exit(0)
@@ -63,12 +66,12 @@ def process_logs():
     try:
         # Main processing loop
         for line in fileinput.input():
-            # Split the line into components
-            line = line.split(' ')
 
             # Check if this is a GET request (simplified condition)
             try:
-                if line[4].find('GET') and line[8].isdigit():
+                if re.match(log_format, line):
+                    # Split the line into components
+                    line = line.split(' ')
                     # Update status code count
                     if line[7] in status_codes:
                         status_codes[line[7]] += 1
