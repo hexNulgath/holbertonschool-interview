@@ -56,10 +56,10 @@ def process_logs() -> None:
 
     # Strict regex pattern for input validation
     log_pattern = re.compile(
-        r'^(\d{1,3}\.){3}\d{1,3} - '
-        r'\[\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d+\] '
-        r'"GET /projects/260 HTTP/1\.1" '
-        r'(\d{3}) (\d+)$'
+        r'^\s*(\d{1,3}\.){3}\d{1,3}\s*-\s*'
+        r'\[\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}(?:\.\d+)?\]\s*'
+        r'"[A-Z]+\s+/[^\s]*\s+HTTP/\d\.\d"\s+'
+        r'(\d{3})\s+(\d+)\s*$'
     )
 
     def handle_interrupt(sig, frame):
