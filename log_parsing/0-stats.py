@@ -56,7 +56,7 @@ def process_logs() -> None:
 
     # Strict regex pattern for input validation
     log_pattern = re.compile(
-        r'.*?\b(?P<status>\d{3})\s+(?P<size>[1-9]\d*)\s*$'
+        r'.*?\b(?P<status>\d*)\s+(?P<size>[1-9]\d*)\s*$'
     )
 
     def handle_interrupt(sig, frame):
