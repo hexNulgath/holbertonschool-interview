@@ -81,6 +81,9 @@ def process_logs():
                 # Print stats every 10 lines
                 if count % 10 == 0:
                     print_stats(total_size, status_codes)
+            else:
+                # If the line does not match the expected format, skip it
+                continue
 
     except KeyboardInterrupt:
         # Handle keyboard interruption (CTRL+C)
