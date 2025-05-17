@@ -1,11 +1,6 @@
 #!/usr/bin/python3
 """
-Log Parser Module
-
-This module reads log data from stdin, parses it to extract information about
-HTTP requests, and prints statistics every 10 lines including:
-- Total file size
-- Count of each HTTP status code encountered
+This is the module docstring that describes what 0-stats.py does
 """
 
 import fileinput
