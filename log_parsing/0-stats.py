@@ -67,21 +67,22 @@ def process_logs():
             line = line.split(' ')
 
             # Check if this is a GET request (simplified condition)
-            if line and line[4].find('GET'):
-                # Update status code count
-                if line[7] in status_codes:
-                    status_codes[line[7]] += 1
-                else:
-                    status_codes[line[7]] = 1
+            try:
+                if line[4].find('GET'):
+                    # Update status code count
+                    if line[7] in status_codes:
+                        status_codes[line[7]] += 1
+                    else:
+                        status_codes[line[7]] = 1
 
-                # Update total file size
-                total_size += int(line[8])
-                count += 1
+                    # Update total file size
+                    total_size += int(line[8])
+                    count += 1
 
-                # Print stats every 10 lines
-                if count % 10 == 0:
-                    print_stats(total_size, status_codes)
-            else:
+                    # Print stats every 10 lines
+                    if count % 10 == 0:
+                        print_stats(total_size, status_codes)
+            except IndexError:
                 # If the line does not match the expected format, skip it
                 continue
 
