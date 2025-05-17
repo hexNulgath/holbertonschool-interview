@@ -59,8 +59,8 @@ def process_logs() -> None:
         r'.*?\b(?P<status>\d*)\s+(?P<size>[1-9]\d*)\s*$'
     )
     valid_status_pattern = re.compile(
-        r'.*?\b(?P<status>200|301|400|401|403|404|405|500)\s+(?P<size>[1-9]\d*)\s*$'
-    )
+        r'.*?\b(?P<status>200|301|400|401|403|404|405|500)\s+'
+        r'(?P<size>[1-9]\d*)\s*$')
 
     def handle_interrupt(sig, frame):
         """Handle keyboard interrupt by printing stats before exiting."""
