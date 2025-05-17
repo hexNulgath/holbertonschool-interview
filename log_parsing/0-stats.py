@@ -68,7 +68,7 @@ def process_logs():
 
             # Check if this is a GET request (simplified condition)
             try:
-                if line[4].find('GET'):
+                if line[4].find('GET') and line[8].isdigit():
                     # Update status code count
                     if line[7] in status_codes:
                         status_codes[line[7]] += 1
