@@ -70,10 +70,11 @@ def process_logs() -> None:
         for line in sys.stdin:
             match = log_pattern.match(line.strip())
             if match:
-                status_code, file_size = match.groups()[-2:]
+                file_size = match.group('size')
+                status_code = match.group('status')
+                total_size += int(file_size)
                 status_codes[status_code] = status_codes.get(
                     status_code, 0) + 1
-                total_size += int(file_size)
                 line_count += 1
 
                 if line_count % 10 == 0:
