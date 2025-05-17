@@ -82,7 +82,7 @@ def process_logs():
                     # Print stats every 10 lines
                     if count % 10 == 0:
                         print_stats(total_size, status_codes)
-            except IndexError:
+            except Exception:
                 # If the line does not match the expected format, skip it
                 continue
 
