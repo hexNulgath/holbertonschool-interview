@@ -58,6 +58,9 @@ def process_logs() -> None:
     log_pattern = re.compile(
         r'.*?\b(?P<status>\d*)\s+(?P<size>[1-9]\d*)\s*$'
     )
+    valid_status_pattern = re.compile(
+        r'.*?\b(?P<status>200|301|400|401|403|404|405|500)\s+(?P<size>[1-9]\d*)\s*$'
+    )
 
     def handle_interrupt(sig, frame):
         """Handle keyboard interrupt by printing stats before exiting."""
@@ -73,8 +76,9 @@ def process_logs() -> None:
                 file_size = match.group('size')
                 status_code = match.group('status')
                 total_size += int(file_size)
-                status_codes[status_code] = status_codes.get(
-                    status_code, 0) + 1
+                if valid_status_pattern.match(line.strip()):
+                    status_codes[status_code] = status_codes.get(
+                        status_code, 0) + 1
                 line_count += 1
 
                 if line_count % 10 == 0:
