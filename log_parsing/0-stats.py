@@ -1,6 +1,27 @@
 #!/usr/bin/python3
 """
-This is the module docstring that describes what 0-stats.py does
+Log Parsing Script
+
+This script reads HTTP access logs from stdin and computes metrics.
+It processes input line by line and outputs statistics every 10 lines.
+
+Input format:
+Each line should follow this format:
+<IP Address> - [<date>] "GET /projects/260 HTTP/1.1" <status code> <file size>
+Example: 127.0.0.1 - [2017-02-05 23:31:22.452556] "GET /projects/260 HTTP/1.1" 200 724
+
+The script extracts and tracks:
+- Total file size (sum of all file sizes encountered)
+- Count of HTTP status codes (200, 301, 400, 401, 403, 404, 405, 500)
+
+Output:
+After every 10 lines processed, the script prints:
+- File size: <total size>
+- <status code>: <number of occurrences> (for each status code, sorted)
+
+Usage:
+    $ cat logfile.txt | ./0-stats.py
+    $ ./0-stats.py < logfile.txt
 """
 import fileinput
 
