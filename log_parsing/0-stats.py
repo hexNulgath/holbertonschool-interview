@@ -56,9 +56,13 @@ def process_logs() -> None:
 
     # Strict regex pattern for input validation
     log_pattern = re.compile(
-        r'^\s*(\d{1,3}\.){3}\d{1,3}\s*-\s*'
-        r'\[\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2}(?:\.\d+)?\]\s*'
-        r'"[A-Z]+\s+/[^\s]*\s+HTTP/\d\.\d"\s+'
+        # IP address
+        r'^\s*(\d{1,3}(?:\.\d{1,3}){3})\s*-\s*'
+        # Timestamp (very flexible)
+        r'\[([\d\-:\s\.]+)\]\s*'
+        # Method, Path, HTTP version
+        r'"([A-Z]+)\s+([^"]+)\s+HTTP/[\d.]+"\s*'
+        # Status code and byte size
         r'(\d{3})\s+(\d+)\s*$'
     )
 
