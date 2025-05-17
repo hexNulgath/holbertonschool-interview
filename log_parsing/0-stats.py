@@ -68,26 +68,22 @@ def process_logs():
         for line in fileinput.input():
 
             # Check if this is a GET request (simplified condition)
-            try:
-                if re.match(log_format, line):
-                    # Split the line into components
-                    line = line.split(' ')
-                    # Update status code count
-                    if line[7] in status_codes:
-                        status_codes[line[7]] += 1
-                    else:
-                        status_codes[line[7]] = 1
+            if re.match(log_format, line):
+                # Split the line into components
+                line = line.split(' ')
+                # Update status code count
+                if line[7] in status_codes:
+                    status_codes[line[7]] += 1
+                else:
+                    status_codes[line[7]] = 1
 
-                    # Update total file size
-                    total_size += int(line[8])
-                    count += 1
+                # Update total file size
+                total_size += int(line[8])
+                count += 1
 
-                    # Print stats every 10 lines
-                    if count % 10 == 0:
-                        print_stats(total_size, status_codes)
-            except Exception:
-                # If the line does not match the expected format, skip it
-                continue
+                # Print stats every 10 lines
+                if count % 10 == 0:
+                    print_stats(total_size, status_codes)
 
     except KeyboardInterrupt:
         # Handle keyboard interruption (CTRL+C)
