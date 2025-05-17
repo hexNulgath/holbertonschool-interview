@@ -1,94 +1,110 @@
 #!/usr/bin/python3
 """
-Log Parsing Script
+Log Parsing and Statistics Script
 
-This script reads HTTP access logs from stdin and computes metrics.
-It processes input line by line and outputs statistics every 10 lines.
+This script reads HTTP access logs from stdin, computes metrics, and prints
+statistics every 10 lines or upon keyboard interruption (CTRL+C).
 
-Input format:
-Each line should follow this format:
+Features:
+- Processes logs in real-time from standard input
+- Tracks total file size transferred
+- Counts occurrences of specific HTTP status codes
+- Handles keyboard interruptions gracefully
+- Validates log format before processing
+
+Input Format:
 <IP Address> - [<date>] "GET /projects/260 HTTP/1.1" <status code> <file size>
-Example: 127.0.0.1 - [2017-02-05 23:31:22.452556] 
-        "GET /projects/260 HTTP/1.1" 200 724
+Example: 127.0.0.1 - [2017-02-05 23:31:22.452556] "GET /projects/260 HTTP/1.1" 200 724
 
-The script extracts and tracks:
-- Total file size (sum of all file sizes encountered)
-- Count of HTTP status codes (200, 301, 400, 401, 403, 404, 405, 500)
+Tracked Status Codes:
+200, 301, 400, 401, 403, 404, 405, 500
 
-Output:
-After every 10 lines and/or a keyboard interruption (CTRL + C), 
-print these statistics from the beginning:
-- File size: <total size>
-- <status code>: <number of occurrences> (for each status code, sorted)
+Output Format:
+File size: <total size>
+<status code>: <count> (for each code, numerically sorted)
 
-Usage:
+Usage Examples:
     $ cat logfile.txt | ./0-stats.py
     $ ./0-stats.py < logfile.txt
+    $ tail -f access.log | ./0-stats.py
 """
+
 import fileinput
 import sys
 import signal
 import re
+from typing import Dict
 
 
-def print_stats(total_size, status_codes):
+def print_stats(total_size: int, status_codes: Dict[str, int]) -> None:
     """
-    Print the current statistics.
+    Display the current statistics in the required format.
 
     Args:
-        total_size (int): Total file size processed so far
-        status_codes (dict): Dictionary with status codes and their counts
+        total_size: Total bytes transferred from all valid requests
+        status_codes: Dictionary mapping status codes to their counts
+
+    Output:
+        Prints statistics to stdout with format:
+        File size: <total_size>
+        <status_code>: <count> (sorted numerically)
     """
     print("File size: {}".format(total_size))
     for code in sorted([int(k) for k in status_codes.keys()]):
         print("{}: {}".format(code, status_codes[str(code)]))
 
 
-def process_logs():
+def process_logs() -> None:
     """
-    Processes the log file line by line, extracting and aggregating data.
+    Main log processing function that:
+    - Initializes tracking variables
+    - Sets up signal handling
+    - Processes input line by line
+    - Prints statistics periodically
+    - Handles interruptions gracefully
     """
-    # Variables to store aggregated data
-    status_codes = {}  # Dictionary to count occurrences of each status code
-    total_size = 0     # Accumulator for total file size
-    count = 0          # Counter for number of lines processed
-    log_format = r'^\S+ - \[\S+ \S+\] "GET /projects/\d+ HTTP/\d\.\d" (\d+) (\d+)$'
+    status_codes = {}  # Track counts of valid status codes
+    total_size = 0     # Accumulate total bytes transferred
+    count = 0          # Count processed lines for periodic output
 
-    # Define signal handler for keyboard interruption
+    # Regular expression for valid log lines
+    log_format = r'^\S+ - \[\S+ \S+\] "GET /projects/\d+ HTTP/\d\.\d" (\d{3}) (\d+)$'
 
-    def signal_handler(sig, frame):
+    def signal_handler(sig: int, frame: object) -> None:
+        """Handle keyboard interruption by printing stats before exiting."""
         print_stats(total_size, status_codes)
         sys.exit(0)
 
-    # Register the signal handler
+    # Register signal handler for CTRL+C
     signal.signal(signal.SIGINT, signal_handler)
 
     try:
-        # Main processing loop
         for line in fileinput.input():
+            match = re.match(log_format, line)
+            if match:
+                # Extract status code and file size from regex groups
+                status_code, file_size = match.groups()
 
-            # Check if this is a GET request (simplified condition)
-            if re.match(log_format, line):
-                # Split the line into components
-                line = line.split(' ')
-                # Update status code count
-                if line[7] in status_codes:
-                    status_codes[line[7]] += 1
+                # Update status code counts
+                if status_code in status_codes:
+                    status_codes[status_code] += 1
                 else:
-                    status_codes[line[7]] = 1
+                    status_codes[status_code] = 1
 
-                # Update total file size
-                total_size += int(line[8])
+                # Update totals
+                total_size += int(file_size)
                 count += 1
 
-                # Print stats every 10 lines
+                # Print stats every 10 valid lines
                 if count % 10 == 0:
                     print_stats(total_size, status_codes)
 
     except KeyboardInterrupt:
-        # Handle keyboard interruption (CTRL+C)
+        # Handle CTRL+C during processing
         print_stats(total_size, status_codes)
         sys.exit(0)
+
+    # Print final stats if we reach EOF without interruption
     print_stats(total_size, status_codes)
 
 
