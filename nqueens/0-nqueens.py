@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
 """
 0-nqueens.py - Solve the N-Queens problem using backtracking.
 """
