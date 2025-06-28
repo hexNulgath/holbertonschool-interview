@@ -78,7 +78,7 @@ if __name__ == "__main__":
         if N < 4:
             raise ValueError
     except ValueError:
-        print("N must be a number.")
+        print("N must be a number")
         sys.exit(1)
     
 
