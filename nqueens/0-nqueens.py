@@ -75,11 +75,12 @@ if __name__ == "__main__":
 
     try:
         N = int(sys.argv[1])
-        if N < 1:
+        if N < 4:
             raise ValueError
     except ValueError:
-        print("N must be a positive integer.")
+        print("N must be a number.")
         sys.exit(1)
+    
 
     solutions = nqueen(N)
     for solution in solutions:
