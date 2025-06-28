@@ -75,9 +75,14 @@ if __name__ == "__main__":
 
     try:
         N = int(sys.argv[1])
+        if type(N) is not int:
+            raise TypeError
         if N < 4:
             raise ValueError
     except ValueError:
+        print("N must be at least 4")
+        sys.exit(1)
+    except TypeError:
         print("N must be a number")
         sys.exit(1)
     
