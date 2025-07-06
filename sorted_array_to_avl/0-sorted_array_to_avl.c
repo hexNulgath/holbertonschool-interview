@@ -2,17 +2,15 @@
 #include <stdlib.h>
 #include "binary_trees.h"
 /**
- * sorted array to avl
- *
  * sorted_array_to_avl - Converts a sorted array to an AVL tree.
+ * @array: Pointer to the first element of the sorted array to be converted.
+ * @size: Number of elements in the array.
  *
- * Parameters:
- *   Where array is a pointer to the first element of the array to be converted
- *	 And size is the number of element in the array
- *   
+ * Description: Recursively builds a height-balanced AVL tree
+ * from a sorted array.
  *
- * Returns:
- *   a pointer to the root node of the created AVL tree, or NULL on failure
+ * Return: Pointer to the root node of the created AVL tree,
+ * or NULL on failure.
  */
 avl_t *sorted_array_to_avl(int *array, size_t size)
 {
