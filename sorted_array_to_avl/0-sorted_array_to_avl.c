@@ -15,17 +15,18 @@
 avl_t *sorted_array_to_avl(int *array, size_t size)
 {
 	size_t mid;
-	avl_t *root = malloc(sizeof(avl_t));
+	avl_t *root;
 
-	if (!root)
-		return (NULL);
 	if (size == 0 || array == NULL)
 		return (NULL);
 	if (size % 2 == 0)
 		mid = size / 2 - 1;
 	else
 		mid = size / 2;
+	root = malloc(sizeof(avl_t));
 
+	if (!root)
+		return (NULL);
 	root->n = array[mid];
 	root->parent = NULL;
 	root->left = sorted_array_to_avl(array, mid);
