@@ -1,6 +1,6 @@
 #!/usr/bin/node
 const request = require('request');
-const filmId = process.argv[1];
+const filmId = process.argv[2];
 
 if (!filmId) {
   console.error('Please provide a film ID as an argument');
@@ -8,7 +8,7 @@ if (!filmId) {
   process.exit(1);
 }
 
-const url = `https://swapi.dev/api/films/${filmId}/`;
+const url = `https://swapi-api.hbtn.io/api/films/${filmId}/`;
 
 request(url, { json: true }, (error, response, body) => {
   if (error) {
