@@ -1,5 +1,6 @@
+#!/usr/bin/node
 const request = require('request');
-const filmId = process.argv[2];
+const filmId = process.argv[1];
 
 if (!filmId) {
   console.error('Please provide a film ID as an argument');
