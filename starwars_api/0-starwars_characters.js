@@ -11,7 +11,7 @@ if (!filmId) {
 const url = `https://swapi-api.hbtn.io/api/films/${filmId}/`;
 
 // Wrap request in a promise to use with async/await
-function requestPromise(url) {
+function requestPromise (url) {
   return new Promise((resolve, reject) => {
     request(url, { json: true }, (error, response, body) => {
       if (error) {
@@ -25,11 +25,11 @@ function requestPromise(url) {
   });
 }
 
-async function getCharacters() {
+async function getCharacters () {
   try {
     const film = await requestPromise(url);
     const characterUrls = film.characters;
-    
+
     // Process characters in order
     for (const characterUrl of characterUrls) {
       try {
