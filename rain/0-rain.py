@@ -13,6 +13,8 @@ def rain(walls):
     units of water will be retained after it rains
     """
     n = len(walls)
+    if n == 0:
+        return 0
     left_max = [0] * n
     right_max = [0] * n
 
