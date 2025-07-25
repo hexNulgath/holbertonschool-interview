@@ -12,18 +12,23 @@ def rain(walls):
     of a relief map, calculate how many square
     units of water will be retained after it rains
     """
+    n = len(walls)
+    left_max = [0] * n
+    right_max = [0] * n
+
+    # Fill left_max array
+    left_max[0] = walls[0]
+    for i in range(1, n):
+        left_max[i] = max(left_max[i-1], walls[i])
+
+    # Fill right_max array
+    right_max[-1] = walls[-1]
+    for i in range(n-2, -1, -1):
+        right_max[i] = max(right_max[i+1], walls[i])
+
+    # Calculate the trapped water
     water = 0
-    max_wall = 0
-    pool = 0
-    for i in range(0, len(walls)):
-        if walls[i] == 0 and max_wall != 0:
-            pool += 1
-        elif walls[i] > max_wall:
-            water += max_wall * pool
-            pool = 0
-            max_wall = walls[i]
-        else:
-            water += walls[i] * pool
-            pool = 0
+    for i in range(n):
+        water += min(left_max[i], right_max[i]) - walls[i]
 
     return water
