@@ -17,20 +17,21 @@ void heap_sort(int *array, size_t size) {
         array[0] = array[i];
         array[i] = temp;
 
-        print_array(array, size); // Print after root swap (NEW)
+        // Sift down the new root (without printing inside)
+        siftDown(array, i, 0);
 
-        // Sift down the new root (and print inside siftDown)
-        siftDown(array, i, 0, size);
+        // Print after each root extraction
+        print_array(array, size);
     }
 }
 
 void heapify(int *array, size_t count) {
     for (ssize_t i = (count / 2) - 1; i >= 0; i--) {
-        siftDown(array, count, i, count);
+        siftDown(array, count, i);
     }
 }
 
-void siftDown(int *array, size_t count, size_t root, size_t total_size) {
+void siftDown(int *array, size_t count, size_t root) {
     size_t largest = root;
     size_t left = 2 * root + 1;
     size_t right = 2 * root + 2;
@@ -46,7 +47,6 @@ void siftDown(int *array, size_t count, size_t root, size_t total_size) {
         array[root] = array[largest];
         array[largest] = temp;
 
-        print_array(array, total_size); // Print only if a swap happens
-        siftDown(array, count, largest, total_size);
+        siftDown(array, count, largest);
     }
 }
