@@ -8,7 +8,6 @@ void heap_sort(int *array, size_t size) {
 
     // Build the max heap
     heapify(array, size);
-    print_array(array, size); // Print initial heap
 
     // Extract elements one by one
     for (size_t i = size - 1; i > 0; i--) {
@@ -17,21 +16,20 @@ void heap_sort(int *array, size_t size) {
         array[0] = array[i];
         array[i] = temp;
 
-        // Sift down the new root (without printing inside)
-        siftDown(array, i, 0);
+        // Sift down the new root (and print inside siftDown)
+        print_array(array, size); // Print the array after each swap
 
-        // Print after each root extraction
-        print_array(array, size);
+        siftDown(array, i, 0, size);
     }
 }
 
 void heapify(int *array, size_t count) {
     for (ssize_t i = (count / 2) - 1; i >= 0; i--) {
-        siftDown(array, count, i);
+        siftDown(array, count, i, count);
     }
 }
 
-void siftDown(int *array, size_t count, size_t root) {
+void siftDown(int *array, size_t count, size_t root, size_t total_size) {
     size_t largest = root;
     size_t left = 2 * root + 1;
     size_t right = 2 * root + 2;
@@ -47,6 +45,8 @@ void siftDown(int *array, size_t count, size_t root) {
         array[root] = array[largest];
         array[largest] = temp;
 
-        siftDown(array, count, largest);
+        print_array(array, total_size); 
+        siftDown(array, count, largest, total_size);
+
     }
 }
