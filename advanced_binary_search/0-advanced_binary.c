@@ -34,12 +34,13 @@ int advanced_binary_recursive(int *array, size_t start, size_t end, int value)
 {
     size_t mid;
 
+    /* Kernel compliance: avoid C99 variable declarations in for/if */
+    mid = start + (end - start) / 2;
+
     if (start > end)
         return (-1);
 
     print_array(array, start, end);
-
-    mid = start + (end - start) / 2;
 
     if (array[mid] == value)
     {
@@ -54,7 +55,7 @@ int advanced_binary_recursive(int *array, size_t start, size_t end, int value)
     }
     else
     {
-        return (advanced_binary_recursive(array, start, mid - 1, value));
+        return (advanced_binary_recursive(array, start, mid, value));
     }
 }
 
