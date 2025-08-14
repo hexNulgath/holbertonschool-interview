@@ -1,10 +1,22 @@
 #!/usr/bin/python3
 """count.py"""
-import praw
 from collections import defaultdict
+import praw
 
 
 def count_words(subreddit, word_list, after=None, word_counts=None):
+    """
+    Recursively count keywords in hot post titles of a subreddit.
+
+    Args:
+        subreddit (str): The subreddit to search
+        word_list (list): List of keywords to count
+        after (str, optional): Reddit API pagination token
+        word_counts (defaultdict, optional): Accumulated word counts
+
+    Returns:
+        None: Prints results to stdout
+    """
     # Initialize word_counts on first call
     if word_counts is None:
         word_counts = defaultdict(int)
