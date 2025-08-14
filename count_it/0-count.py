@@ -1,4 +1,4 @@
-#!/usr/
+#!/usr/bin/python3
 """count.py"""
 import praw
 from collections import defaultdict
