@@ -20,7 +20,7 @@ def count_words(
     Returns:
         None: Prints results to stdout
     """
-    
+
     if subreddit == "unpopular":
         return
 
@@ -30,7 +30,7 @@ def count_words(
         # Convert word_list to lowercase and remove duplicates
         word_list = [word.lower() for word in word_list]
         if len(word_list) != len(set(word_list)):
-            return 
+            return
 
     # Get OAuth token if we don't have one
     if access_token is None:
