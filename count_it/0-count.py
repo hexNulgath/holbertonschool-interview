@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """count.py"""
 from collections import defaultdict
-import praw
+import requests
 
 
 def count_words(subreddit, word_list, after=None, word_counts=None):
@@ -23,32 +23,62 @@ def count_words(subreddit, word_list, after=None, word_counts=None):
         # Convert word_list to lowercase and remove duplicates
         word_list = [word.lower() for word in word_list]
 
-    # Create Reddit instance
-    reddit = praw.Reddit(
-        client_id='H8grgk6g5MGhFRutcE0vSA',
-        client_secret='PkvloyaALyYe4T9GFTBcdwZfpXEJPA',
-        user_agent='count_words/0.1 by YOUR_USERNAME'
-    )
+    # Get OAuth token if we don't have one
+    if access_token is None:
+        auth = requests.auth.HTTPBasicAuth(
+            'H8grgk6g5MGhFRutcE0vSA', 'PkvloyaALyYe4T9GFTBcdwZfpXEJPA')
+        data = {'grant_type': 'client_credentials'}
+        headers = {'User-Agent': 'Student_test'}
+
+        try:
+            response = requests.post(
+                'https://www.reddit.com/api/v1/access_token',
+                auth=auth, data=data, headers=headers
+            )
+            response.raise_for_status()
+            access_token = response.json()['access_token']
+        except Exception:
+            return  # Invalid credentials or other error
+
+    # Make API request for posts
+    headers = {
+        'User-Agent': 'count_words/0.1 by YOUR_USERNAME',
+        'Authorization': f'bearer {access_token}'
+    }
+    params = {'limit': 100}
+    if after:
+        params['after'] = after
 
     try:
-        # Get hot posts for the subreddit
-        sub = reddit.subreddit(subreddit)
-        posts = sub.hot(limit=100, params={'after': after} if after else None)
+        response = requests.get(
+            f'https://oauth.reddit.com/r/{subreddit}/hot',
+            headers=headers,
+            params=params,
+            allow_redirects=False
+        )
 
-        # Process each post's title
-        for post in posts:
-            title_words = post.title.split()
-            for word in title_words:
+        # Handle 3XX redirects (invalid subreddits)
+        if response.status_code >= 300 and response.status_code < 400:
+            return
+
+        response.raise_for_status()
+        data = response.json()
+
+        # Process posts
+        for post in data['data']['children']:
+            title = post['data']['title']
+            for word in title.split():
                 # Clean the word (remove punctuation and make lowercase)
                 cleaned = ''.join(c for c in word if c.isalnum()).lower()
                 if cleaned in word_list:
                     word_counts[cleaned] += 1
 
-        # Check if there are more posts to process
-        if hasattr(posts, '_listing') and hasattr(
-                posts._listing, 'after') and posts._listing.after:
+        # Recursively process next page if exists
+        if data['data']['after']:
             return count_words(
-                subreddit, word_list, posts._listing.after, word_counts)
+                subreddit, word_list,
+                data['data']['after'], word_counts, access_token
+            )
         else:
             # No more posts, print results
             sorted_counts = sorted(
@@ -58,6 +88,5 @@ def count_words(subreddit, word_list, after=None, word_counts=None):
             for word, count in sorted_counts:
                 print(f"{word}: {count}")
 
-    except Exception as e:
-        # Invalid subreddit or other error - print nothing
+    except Exception:
         return
