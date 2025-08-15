@@ -90,6 +90,7 @@ def count_words(
             )
             for word, count in sorted_counts:
                 print(f"{word}: {count}")
+            return "OK"
 
     except Exception:
         return
