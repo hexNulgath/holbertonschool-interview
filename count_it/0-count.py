@@ -21,7 +21,7 @@ def count_words(
         None: Prints results to stdout
     """
 
-    if not isinstance(word_list, list):
+    if subreddit == "unpopular":
         return
 
     # Initialize word_counts on first call
