@@ -4,7 +4,8 @@ from collections import defaultdict
 import requests
 
 
-def count_words(subreddit, word_list, after=None, word_counts=None):
+def count_words(
+        subreddit, word_list, after=None, word_counts=None, access_token=None):
     """
     Recursively count keywords in hot post titles of a subreddit.
 
@@ -13,6 +14,8 @@ def count_words(subreddit, word_list, after=None, word_counts=None):
         word_list (list): List of keywords to count
         after (str, optional): Reddit API pagination token
         word_counts (defaultdict, optional): Accumulated word counts
+        access_token (str, optional): OAuth2 access token
+
 
     Returns:
         None: Prints results to stdout
