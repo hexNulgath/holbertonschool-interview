@@ -20,6 +20,10 @@ def count_words(
     Returns:
         None: Prints results to stdout
     """
+
+    if not isinstance(word_list, list):
+        return
+
     # Initialize word_counts on first call
     if word_counts is None:
         word_counts = defaultdict(int)
