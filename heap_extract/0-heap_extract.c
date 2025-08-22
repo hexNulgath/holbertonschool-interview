@@ -31,8 +31,8 @@ heap_t *get_last_node(heap_t *root)
 	int front = 0, rear = 0;
 
 	if (!root)
-		return NULL;
-	
+		return (NULL);
+
 	height = tree_height(root);
 	queue = malloc(sizeof(heap_t *) * (1 << height));
 	if (!queue)
@@ -43,6 +43,7 @@ heap_t *get_last_node(heap_t *root)
 	while (front < rear)
 	{
 		heap_t *current = queue[front++];
+
 		last = current;
 
 		if (current->left)
