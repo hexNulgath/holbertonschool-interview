@@ -27,7 +27,8 @@ size_t tree_height(const heap_t *tree)
 heap_t *get_last_node(heap_t *root)
 {
 	size_t height;
-	heap_t **queue, *last = NULL, *current = NULL;
+	heap_t **queue, *last = NULL;
+	heap_t *current = NULL;
 	int front = 0, rear = 0;
 
 	if (!root)
