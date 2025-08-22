@@ -20,10 +20,8 @@ typedef struct binary_tree_s
 } binary_tree_t;
 typedef struct binary_tree_s heap_t;
 
-void swap_values(heap_t *a, heap_t *b);
-size_t tree_height(const heap_t *tree);
+void heapify_down(heap_t *root);
 heap_t *get_last_node(heap_t *root);
-void sift_down(heap_t *node);
 void binary_tree_print(const binary_tree_t *);
 int heap_extract(heap_t **root);
 heap_t *_array_to_heap(int *array, size_t size);

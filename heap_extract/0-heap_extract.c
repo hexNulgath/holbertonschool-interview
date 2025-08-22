@@ -1,67 +1,81 @@
-
 #include "binary_trees.h"
 #include <stdlib.h>
 
 /**
- * swap_values - Swap the values of two nodes
- */
-void swap_values(heap_t *a, heap_t *b)
-{
-    int tmp = a->n;
-    a->n = b->n;
-    b->n = tmp;
-}
-
-/**
  * tree_height - Measures the height of a binary tree
+ * @tree: Pointer to the root node
+ * Return: Height of the tree
  */
 size_t tree_height(const heap_t *tree)
 {
     size_t l, r;
+    
     if (!tree)
         return 0;
+    
     l = tree_height(tree->left);
     r = tree_height(tree->right);
+    
     return 1 + (l > r ? l : r);
 }
 
 /**
  * get_last_node - Finds the last node in level order
+ * @root: Pointer to the root node
+ * Return: Pointer to the last node
  */
 heap_t *get_last_node(heap_t *root)
 {
-    size_t h = tree_height(root), mask = 1UL << (h - 2);
-    heap_t *node = root;
-    if (!root || h == 1)
-        return root;
-    while (mask)
+    size_t height;
+    heap_t **queue, *last = NULL;
+    int front = 0, rear = 0;
+    
+    if (!root)
+        return NULL;
+    
+    height = tree_height(root);
+    queue = malloc(sizeof(heap_t *) * (1 << height));
+    if (!queue)
+        return NULL;
+    
+    queue[rear++] = root;
+    
+    while (front < rear)
     {
-        if ((mask & (1UL << (h - 2))) && node->right)
-            node = node->right;
-        else if (node->left)
-            node = node->left;
-        mask >>= 1;
+        heap_t *current = queue[front++];
+        last = current;
+        
+        if (current->left)
+            queue[rear++] = current->left;
+        if (current->right)
+            queue[rear++] = current->right;
     }
-    return node;
+    
+    free(queue);
+    return last;
 }
 
 /**
- * sift_down - Heapify down from the root
+ * heapify_down - Restores max heap property from root downward
+ * @root: Pointer to the root node
  */
-void sift_down(heap_t *node)
+void heapify_down(heap_t *root)
 {
-    heap_t *largest;
-    while (node)
+    heap_t *largest = root;
+    int temp;
+    
+    if (root->left && root->left->n > largest->n)
+        largest = root->left;
+    
+    if (root->right && root->right->n > largest->n)
+        largest = root->right;
+    
+    if (largest != root)
     {
-        largest = node;
-        if (node->left && node->left->n > largest->n)
-            largest = node->left;
-        if (node->right && node->right->n > largest->n)
-            largest = node->right;
-        if (largest == node)
-            break;
-        swap_values(node, largest);
-        node = largest;
+        temp = root->n;
+        root->n = largest->n;
+        largest->n = temp;
+        heapify_down(largest);
     }
 }
 
@@ -73,39 +87,37 @@ void sift_down(heap_t *node)
 int heap_extract(heap_t **root)
 {
     heap_t *last, *parent;
-    size_t h;
     int value;
-    unsigned long mask;
+    
     if (!root || !*root)
         return 0;
+    
     value = (*root)->n;
+    
     if (!(*root)->left && !(*root)->right)
     {
         free(*root);
         *root = NULL;
         return value;
     }
-    last = *root;
-    h = tree_height(*root), mask = 1UL << (h - 2);
-    parent = NULL;
-    while (mask)
-    {
-        parent = last;
-        if ((mask & (1UL << (h - 2))) && last->right)
-            last = last->right;
-        else if (last->left)
-            last = last->left;
-        mask >>= 1;
-    }
+    
+    last = get_last_node(*root);
+    if (!last)
+        return 0;
+    
     (*root)->n = last->n;
+    
+    parent = last->parent;
     if (parent)
     {
         if (parent->left == last)
             parent->left = NULL;
-        else if (parent->right == last)
+        else
             parent->right = NULL;
     }
+    
     free(last);
-    sift_down(*root);
+    heapify_down(*root);
+    
     return value;
 }
