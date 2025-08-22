@@ -28,7 +28,6 @@ heap_t *get_last_node(heap_t *root)
 {
 	size_t height;
 	heap_t **queue, *last = NULL;
-	heap_t *current = NULL;
 	int front = 0, rear = 0;
 
 	if (!root)
@@ -43,7 +42,7 @@ heap_t *get_last_node(heap_t *root)
 
 	while (front < rear)
 	{
-		*current = queue[front++];
+		heap_t *current = queue[front++];
 		last = current;
 
 		if (current->left)
