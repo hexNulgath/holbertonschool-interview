@@ -21,9 +21,6 @@ char *multiply(const char *num1, const char *num2)
 	len2 = _strlen(num2);
 	result_len = len1 + len2;
 	result_arr = malloc(result_len * sizeof(int));
-	if (!result_arr)
-		return (NULL);
-
 	for (i = 0; i < result_len; i++)
 		result_arr[i] = 0;
 
@@ -40,14 +37,7 @@ char *multiply(const char *num1, const char *num2)
 		}
 		result_arr[i] += carry;
 	}
-
 	result_str = malloc(result_len + 1);
-	if (!result_str)
-	{
-		free(result_arr);
-		return (NULL);
-	}
-
 	k = 0;
 	leading_zero = 1;
 	for (i = 0; i < result_len; i++)
