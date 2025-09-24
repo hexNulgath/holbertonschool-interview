@@ -10,23 +10,13 @@ def makeChange(coins, total):
     if total <= 0:
         return 0
 
-    def helper(remaining, memo={}):
-        if remaining in memo:
-            return memo[remaining]
-        if remaining == 0:
-            return 0
-        if remaining < 0:
-            return float('inf')
+    # Initialize DP array with impossible values
+    dp = [float('inf')] * (total + 1)
+    dp[0] = 0
 
-        min_coins = float('inf')
+    for amount in range(1, total + 1):
         for coin in coins:
-            if coin <= remaining:
-                result = helper(remaining - coin, memo)
-                if result != float('inf'):
-                    min_coins = min(min_coins, result + 1)
+            if coin <= amount:
+                dp[amount] = min(dp[amount], dp[amount - coin] + 1)
 
-        memo[remaining] = min_coins
-        return min_coins
-
-    result = helper(total)
-    return result if result != float('inf') else -1
+    return dp[total] if dp[total] != float('inf') else -1
