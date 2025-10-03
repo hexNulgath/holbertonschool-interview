@@ -19,6 +19,11 @@ List *add_node_end(List **list, char *str)
 		return (NULL);
 
 	new_node->str = strdup(str);
+    if (!new_node->str)
+    {
+        free(new_node);
+        return (NULL);
+    }
 	if (!*list)
 	{
 		new_node->prev = new_node;
