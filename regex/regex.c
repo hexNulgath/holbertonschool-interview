@@ -1,8 +1,6 @@
-#include <stdio.h>
 int regex_match(char const *str, char const *pattern)
 {
     while (*pattern) {
-        printf("Matching '%c' with '%c'\n", *str, *pattern);
         if (*pattern == '*') {
             pattern++;
             if (!*pattern) {
