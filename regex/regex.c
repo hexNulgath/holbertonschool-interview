@@ -21,14 +21,14 @@ int regex_match(char const *str, char const *pattern)
 			return (1);
 
 		if (*str != '\0' && (*pattern == '.' || *pattern == *str))
-			return regex_match(str + 1, pattern);
+			return (regex_match(str + 1, pattern));
 
 		return (0);
 	}
 	else
 	{
 		if (*str != '\0' && (*pattern == '.' || *pattern == *str))
-			return regex_match(str + 1, pattern + 1);
+			return (regex_match(str + 1, pattern + 1));
 
 		return (0);
 	}
