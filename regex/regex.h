@@ -1,0 +1,6 @@
+#ifndef HOLBERTON_SCHOOL_INTERVIEW_REGEX_REGEX_H
+#define HOLBERTON_SCHOOL_INTERVIEW_REGEX_REGEX_H
+
+int regex_match(char const *str, char const *pattern);
+
+#endif /* HOLBERTON_SCHOOL_INTERVIEW_REGEX_REGEX_H */
