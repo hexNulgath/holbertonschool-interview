@@ -1,9 +1,8 @@
+#include "substring.h"
 /*
  * Description: functions to find all indices where a concatenation of the
  *              provided words appears in a string.
  */
-
-#include "substring.h"
 
 int *find_substring(char const *s, char const **words, int nb_words, int *n)
 {
