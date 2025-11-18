@@ -10,19 +10,14 @@
 
 int *find_substring(char const *s, char const **words, int nb_words, int *n)
 {
-	int word_len;
 	const char *s_start;
-	int *arr;
-	int i, j, new_size;
+	int i, j, new_size, *arr, word_len;
 	bool found;
 
 	word_len = strlen(words[0]);
 	s_start = s;
-
 	*n = 0;
 	arr = malloc(10000 * sizeof(int));
-	if (arr == NULL)
-		return (NULL);
 	while (*s != '\0')
 	{
 		found = false;
@@ -30,6 +25,7 @@ int *find_substring(char const *s, char const **words, int nb_words, int *n)
 		{
 			const char *word = words[i];
 			char const **helper = NULL;
+
 			if (strncmp(s, word, word_len) == 0)
 			{
 				helper = malloc((nb_words - 1) * sizeof(char *));
