@@ -1,7 +1,4 @@
 /*
- * File: substring.c
- * Auth: hexNulgath <machadoignacio@hotail.com>
- *
  * Description: functions to find all indices where a concatenation of the
  *              provided words appears in a string.
  */
