@@ -1,75 +1,103 @@
-#include "substring.h"
-#include <string.h>
-#include <stdlib.h>
-#include <stdbool.h>
+/*
+ * File: substring.c
+ * Auth: hexNulgath <machadoignacio@hotail.com>
+ *
+ * Description: functions to find all indices where a concatenation of the
+ *              provided words appears in a string.
+ */
 
-bool find_substring_helper(char const *s, char const **words, int nb_words, int word_len);
+#include "substring.h"
 
 int *find_substring(char const *s, char const **words, int nb_words, int *n)
 {
-	int word_len = strlen(words[0]);
-	const char *s_start = s;
+	int word_len;
+	const char *s_start;
+	int *arr;
+	int i, j, new_size;
+	bool found;
+
+	word_len = strlen(words[0]);
+	s_start = s;
 
 	*n = 0;
-	int *arr = malloc(10000 * sizeof(int));
+	arr = malloc(10000 * sizeof(int));
+	if (arr == NULL)
+		return (NULL);
 
-	while (*s != '\0') {
-
-		bool found = false;
-
-		for (int i = 0; i < nb_words; i++) {
+	while (*s != '\0')
+	{
+		found = false;
+		for (i = 0; i < nb_words; i++)
+		{
 			const char *word = words[i];
+			char const **helper = NULL;
 
-			if (strncmp(s, word, word_len) == 0) {
-				char const *helper[nb_words - 1];
-				int new_size = 0;
+			if (strncmp(s, word, word_len) == 0)
+			{
+				helper = malloc((nb_words - 1) * sizeof(char *));
+				if (helper == NULL)
+					continue;
 
-				for (int j = 0; j < nb_words; j++) {
-					if (j != i) {
+				new_size = 0;
+				for (j = 0; j < nb_words; j++)
+				{
+					if (j != i)
 						helper[new_size++] = words[j];
-					}
 				}
 
-				if (find_substring_helper(s + word_len, helper, new_size, word_len)) {
+				if (find_substring_helper(s + word_len, helper, new_size, word_len))
 					found = true;
+
+				free((void *)helper);
+				if (found)
 					break;
-				}
 			}
 		}
 
-		if (found) {
+		if (found)
 			arr[(*n)++] = s - s_start;
-		}
 
 		s++;
 	}
 
-	return arr;
+	return (arr);
 }
 
-bool find_substring_helper(char const *s, char const **words, int nb_words, int word_len)
+bool find_substring_helper(char const *s, char const **words, int nb_words,
+						   int word_len)
 {
+	int i, j, new_size;
+	char const **helper = NULL;
+
 	if (nb_words == 0)
-		return true;
+		return (true);
 
-	for (int i = 0; i < nb_words; i++) {
-
+	for (i = 0; i < nb_words; i++)
+	{
 		const char *word = words[i];
 
-		if (strncmp(s, word, word_len) == 0) {
+		if (strncmp(s, word, word_len) == 0)
+		{
+			helper = malloc((nb_words - 1) * sizeof(char *));
+			if (helper == NULL)
+				return (false);
 
-			char const *helper[nb_words - 1];
-			int new_size = 0;
-
-			for (int j = 0; j < nb_words; j++) {
+			new_size = 0;
+			for (j = 0; j < nb_words; j++)
+			{
 				if (j != i)
 					helper[new_size++] = words[j];
 			}
 
 			if (find_substring_helper(s + word_len, helper, new_size, word_len))
-				return true;
+			{
+				free((void *)helper);
+				return (true);
+			}
+
+			free((void *)helper);
 		}
 	}
 
-	return false;
+	return (false);
 }
