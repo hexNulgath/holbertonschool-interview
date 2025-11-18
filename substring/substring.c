@@ -1,7 +1,13 @@
 #include "substring.h"
-/*
- * Description: functions to find all indices where a concatenation of the
- *              provided words appears in a string.
+/**
+ * find_substring - finds all starting indices
+ *                 of concatenated words in a string
+ * @s: The main string to search within
+ * @words: Array of words to concatenate and search for
+ * @nb_words: Number of words in the words array
+ * @n: Pointer to store the number of found indices
+ *
+ * Return: index array of starting positions
  */
 
 int *find_substring(char const *s, char const **words, int nb_words, int *n)
