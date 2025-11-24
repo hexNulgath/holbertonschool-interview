@@ -6,6 +6,8 @@ def isWinner(x, nums):
     """
     Determines the winner of the prime game.
     """
+    if x < 1 or not nums or x != len(nums):
+        return None
     max_num = max(nums)
     prime_flags = prime_list(max_num)
     prime_counts = [0] * (max_num + 1)
